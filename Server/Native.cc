@@ -54,8 +54,9 @@ uWS::App Server::server = uWS::App({
 void Server::run() {
     struct us_loop_t *loop = (struct us_loop_t *) uWS::Loop::get();
     struct us_timer_t *delayTimer = us_create_timer(loop, 0, 0);
+    uint32_t timer_interval_ms = 1000 / TPS;
 
-    us_timer_set(delayTimer, [](us_timer_t *x){ Server::tick(); }, 1, 1000 / TPS);
+    us_timer_set(delayTimer, [](us_timer_t *x){ Server::tick(); }, timer_interval_ms, timer_interval_ms);    
     Server::server.run();
 }
 
