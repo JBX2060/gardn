@@ -14,7 +14,13 @@ void Simulation::tick() {
         if (ent.has_component(kPhysics)) {
             float prev_x = ent.x;
             float prev_y = ent.y;
+            Vector vel(ent.x - prev_x, ent.y - prev_y);
             if (!ent.pending_delete) {
+                float prediction_time = fclamp(Ui::dt / 1000.0f, 0.0f, 1.0f / 60.0f);
+                float predicted_x = ent.x.get_target() + vel.x * prediction_time;
+                float predicted_y = ent.y.get_target() + vel.y * prediction_time;
+                ent.x.set(predicted_x);
+                ent.y.set(predicted_y);
                 ent.x.step(amt);
                 ent.y.step(amt);
             }
@@ -23,7 +29,6 @@ void Simulation::tick() {
                     LERP(ent.animation, 1, amt * 0.75)
                 else ent.animation = 1;
             } else {
-                Vector vel(ent.x - prev_x, ent.y - prev_y);
                 ent.animation += (1 + 0.75 * vel.magnitude()) * 0.075;
             }
             ent.radius.step(amt);

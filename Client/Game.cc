@@ -18,7 +18,6 @@ static int _i = setup_inputs();
 namespace Game {
     Simulation simulation;
     Renderer renderer;
-    Renderer game_ui_renderer;
     Socket socket;
     Ui::Window title_ui_window;
     Ui::Window game_ui_window;
@@ -54,7 +53,7 @@ void Game::init() {
     reset();
     title_ui_window.add_child(
         [](){ 
-            Ui::Element *elt = new Ui::StaticText(60, "rexor.io");
+            Ui::Element *elt = new Ui::StaticText(80, "rexor.io");
             elt->x = 0;
             elt->y = -270;
             return elt;
@@ -105,7 +104,7 @@ void Game::init() {
     );
     game_ui_window.add_child(
         new Ui::HContainer({
-            new Ui::StaticText(20, "rexor.io")
+            new Ui::StaticText(30, "rexor.io")
         }, 20, 0, { .h_justify = Ui::Style::Left, .v_justify = Ui::Style::Top })
     );
     Ui::make_petal_tooltips();
@@ -113,7 +112,7 @@ void Game::init() {
         Ui::make_debug_stats()
     );
     other_ui_window.style.no_polling = 1;
-    socket.connect(WS_URL);
+    socket.connect(get_ws_url());
 }
 
 void Game::reset() {
@@ -159,8 +158,6 @@ void Game::tick(double time) {
     simulation.tick();
     
     renderer.reset();
-    game_ui_renderer.set_dimensions(renderer.width, renderer.height);
-    game_ui_renderer.reset();
 
     Ui::window_width = renderer.width;
     Ui::window_height = renderer.height;
@@ -219,13 +216,12 @@ void Game::tick(double time) {
         if (!Game::alive()) {
             RenderContext c(&renderer);
             renderer.reset_transform();
-            renderer.set_fill(0x20000000);
+            renderer.set_fill(0x40000000);
             renderer.fill_rect(0,0,renderer.width,renderer.height);
         }
-        game_ui_window.render(game_ui_renderer);
+        game_ui_window.render(renderer);
         renderer.set_global_alpha(0.85);
         renderer.translate(renderer.width/2,renderer.height/2);
-        renderer.draw_image(game_ui_renderer);
         //process keybind petal switches
         if (Input::keys_pressed_this_tick.contains('X'))
             Game::swap_all_petals();
@@ -260,7 +256,7 @@ void Game::tick(double time) {
         }
     } else {
         Ui::UiLoadout::selected_with_keys = MAX_SLOT_COUNT;
-        game_ui_window.on_render_skip(game_ui_renderer);
+        game_ui_window.on_render_skip(renderer);
     }
         
     if (Game::timestamp - Ui::UiLoadout::last_key_select > 5000)
@@ -270,6 +266,7 @@ void Game::tick(double time) {
     other_ui_window.render(renderer);
 
     //no rendering past this point
+    renderer.flush();
 
     if (socket.ready && alive()) send_inputs();
 

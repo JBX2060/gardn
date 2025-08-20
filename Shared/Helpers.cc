@@ -72,6 +72,10 @@ LerpFloat::operator float() const {
     return lerp_value;
 }
 
+float LerpFloat::get_target() const {
+    return value;
+}
+
 void LerpFloat::step(float amt) {
     lerp_value = lerp(lerp_value, value, amt);
 }

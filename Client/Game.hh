@@ -13,7 +13,6 @@
 namespace Game {
     extern Simulation simulation;
     extern Renderer renderer;
-    extern Renderer game_ui_renderer;
     extern Socket socket;
     extern Ui::Window title_ui_window;
     extern Ui::Window game_ui_window;

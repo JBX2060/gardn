@@ -90,11 +90,11 @@ public:
     void clip();
     void clip_rect(float, float, float, float);
 
-    void draw_image(Renderer &);
+    // void draw_image(Renderer &);
 
     void fill_text(char const *);
     void stroke_text(char const *);
     void draw_text(char const *, struct TextArgs const);
-    float get_text_size(char const *);
+    void flush();
     //text ops
 };

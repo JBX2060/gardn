@@ -70,18 +70,30 @@ if(WASM_SERVER)
     add_executable(gardn-server ${SOURCES})
     set(CMAKE_EXECUTABLE_SUFFIX ".js")
 else()
-    set(CMAKE_CXX_COMPILER "g++")
+    set(CMAKE_CXX_COMPILER "g++")    
+    find_package(OpenSSL REQUIRED)
     add_executable(gardn-server ${SOURCES})
-    target_include_directories(gardn-server PRIVATE ${CMAKE_SOURCE_DIR}/uWebSockets/src)
-    target_link_directories(gardn-server PRIVATE ${CMAKE_SOURCE_DIR}/uWebSockets/uSockets)
-    target_include_directories(gardn-server PRIVATE ${CMAKE_SOURCE_DIR}/uWebSockets/uSockets/src)
-
-    # Support MacOS
-    target_link_directories(gardn-server PRIVATE /opt/homebrew/lib)
-    target_include_directories(gardn-server PRIVATE /opt/homebrew/include)
-    target_link_libraries(gardn-server uv z)
-    target_link_libraries(gardn-server ${CMAKE_SOURCE_DIR}/uWebSockets/uSockets/uSockets.a)
+    
+    target_include_directories(gardn-server PRIVATE
+        ${CMAKE_SOURCE_DIR}/uWebSockets/src
+        ${CMAKE_SOURCE_DIR}/uWebSockets/uSockets/src
+    )
+    
+    target_link_libraries(gardn-server PRIVATE
+        ${CMAKE_SOURCE_DIR}/uWebSockets/uSockets/uSockets.a
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        z
+        pthread
+        # uv
+    )
+    
+    if(APPLE)
+        target_link_directories(gardn-server PRIVATE /opt/homebrew/lib)
+        target_include_directories(gardn-server PRIVATE /opt/homebrew/include)
+    endif()
+    
     if(CMAKE_HOST_WIN32)
-        target_link_libraries(gardn-server ws2_32)
+        target_link_libraries(gardn-server PRIVATE ws2_32)
     endif()
 endif()

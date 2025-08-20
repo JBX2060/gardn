@@ -4,10 +4,9 @@
 #include <Server/Client.hh>
 #include <Shared/Config.hh>
 
-uWS::App Server::server = uWS::App({
+uWS::SSLApp Server::server = uWS::SSLApp({
     .key_file_name = "misc/key.pem",
     .cert_file_name = "misc/cert.pem",
-    .passphrase = "1234"
 }).ws<Client>("/*", {
     /* Settings */
     .compression = uWS::DISABLED,

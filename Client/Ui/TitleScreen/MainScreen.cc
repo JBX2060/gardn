@@ -15,38 +15,31 @@ using namespace Ui;
 
 Element *Ui::make_title_input_box() {
     Ui::Element *title = new Ui::VContainer({
-        new Ui::Element(0, 60),
         new Ui::Choose(
-            new Ui::StaticText(40, "Connecting..."),
+            new Ui::StaticText(45, "Connecting..."),
             new Ui::VContainer({
                 new Ui::StaticText(20, "This pretty little flower is called..."),
                 new Ui::HContainer({
-                    new Ui::TextInput(Game::nickname, 400, 45, MAX_NAME_LENGTH, {
+                    new Ui::TextInput(Game::nickname, 400, 55, MAX_NAME_LENGTH, {
                         .line_width = 5,
                         .round_radius = 5,
-                        .animate = [](Element *elt, Renderer &ctx) { 
+                        .animate = [](Element *elt, Renderer &ctx) {
                             ctx.translate(0, (elt->animation - 1) * ctx.height * 0.6);
                         },
                         .should_render = [](){
                             return !Game::in_game() && Game::transition_circle <= 0;
                         }
                     }),
-                    new Ui::Button(110, 36, 
-                        new Ui::StaticText(25, "Spawn"), 
-                        [](Element *elt, uint8_t e){ if (e == Ui::kClick) Game::spawn_in(); },
-                        [](){ return Game::in_game() != 0; },
-                        { .fill = 0xff1dd129, .line_width = 5, .round_radius = 3 }
-                    )
                 }, 0, 10,{}),
-                new Ui::StaticText(14, "(or press ENTER to spawn)")
+                new Ui::StaticText(14, "(press enter to spawn)")
             }, 10, 5, { .animate = [](Element *elt, Renderer &ctx) {
                 ctx.translate(0, (elt->animation - 1) * ctx.height);
             } }),
             [](){ return Game::socket.ready; }
         ),
-        new Ui::Element(0,20),
-        new Ui::StaticText(16, "florr.io pvp clone"),
+        new Ui::Element(0,15),
     }, 0, 0, { .animate = [](Element *elt, Renderer &ctx){}, .should_render = [](){ return Game::should_render_title_ui(); } });
+    title->y = -45;
     return title;
 }
 
@@ -54,14 +47,14 @@ Element *Ui::make_title_info_box() {
     Element *elt = new Ui::Choose(
         new Ui::Choose(
             new Ui::VContainer({
-                new Ui::StaticText(35, "How to play"),
+                new Ui::StaticText(29.5, "How to play"),
                 new Ui::Element(0,5),
                 new Ui::StaticText(16, "Use mouse to move"),
                 new Ui::StaticText(16, "Right click to attack"),
                 new Ui::StaticText(16, "Left click to defend")
             }, 0, 5, { .no_animation = 1 }),
             new Ui::VContainer({
-                new Ui::StaticText(35, "How to play"),
+                new Ui::StaticText(29.5, "How to play"),
                 new Ui::Element(0,5),
                 new Ui::StaticText(16, "Use WASD or arrow keys to move"),
                 new Ui::StaticText(16, "SPACE to attack"),
@@ -96,7 +89,7 @@ Element *Ui::make_title_info_box() {
         }
     );
     elt->x = 0;
-    elt->y = 270;
+    elt->y = 125;
     return elt;
 }
 

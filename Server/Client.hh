@@ -11,7 +11,7 @@ class WebSocket;
 #else
 #include <App.h>
 class Client;
-typedef uWS::WebSocket<false, true, Client> WebSocket;
+typedef uWS::WebSocket<true, true, Client> WebSocket;
 #endif
 
 class GameInstance;

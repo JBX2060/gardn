@@ -113,6 +113,7 @@ public:
     void operator=(float);
     void set(float);
     operator float() const;
+    float get_target() const;
     void step(float);
     void step_angle(float);
 };

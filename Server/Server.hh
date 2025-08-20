@@ -15,7 +15,7 @@ public:
 };
 #else
 #include <App.h>
-typedef uWS::App WebSocketServer;
+typedef uWS::SSLApp WebSocketServer;
 #endif
 
 namespace Server {
