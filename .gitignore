@@ -1,4 +1,5 @@
 build/
+Server/misc/
 wasm_build/
 node_modules/
 .vs/
@@ -6,3 +7,9 @@ node_modules/
 gardn-client.js
 gardn-client.wasm
 .env
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
